@@ -35,7 +35,7 @@ sudo /tools/Xilinx/Vitis/2020.2/scripts/installLibs.sh
 
 ```shell
 TARGET_HOSTNAME=coconut-milk
-XSA_DIR=${HOME}/petalinux/Cora-Z7-07S/petalinux_bsp/hardware_project
+XSA_DIR=${HOME}/output/xsa
 
 petalinux-util --webtalk off
 petalinux-create --type project --template zynq --name ${TARGET_HOSTNAME}
@@ -46,6 +46,27 @@ petalinux-config --get-hw-description=${XSA_DIR}
 設定画面で、rootfsのfilesystemをext4に変更する。
 
 - `Image Packaging Configuration` → `Root filesystem type` → `EXT4`
+
+`user-rootfsconfig`に以下を追記しておく。
+
+```shell
+$ cat project-spec/meta-user/conf/user-rootfsconfig
+#Note: Mention Each package in individual line
+#These packages will get added into rootfs menu entry
+
+CONFIG_gpio-demo
+CONFIG_peekpoke
+CONFIG_xrt
+CONFIG_xrt-dev
+CONFIG_zocl
+CONFIG_opencl-clhpp-dev
+CONFIG_opencl-headers-dev
+CONFIG_packagegroup-petalinux-opencv
+CONFIG_packagegroup-petalinux-opencv-dev
+CONFIG_cmake
+CONFIG_tmux
+CONFIG_clinfo
+```
 
 ```shell
 petalinux-config --component kernel --silentconfig
@@ -100,7 +121,7 @@ boot.scr  image.ub  pxelinux.cfg  rootfs.cpio  rootfs.cpio.gz  rootfs.cpio.gz.u-
 
 ```shell
 cp ${HOME}/petalinux/Cora-Z7-07S/base.bit images/linux/system.bit
-petalinux-package --boot --fsbl ./images/linux/zynq_fsbl.elf --fpga ./images/linux/system.bit --u-boot
+petalinux-package --force --boot --fsbl ./images/linux/zynq_fsbl.elf --fpga ./images/linux/system.bit --u-boot # --bif boot.bif
 ```
 
 ```shell
@@ -114,4 +135,11 @@ cp images/linux/BOOT.BIN ~/output/
 cp images/linux/image.ub ~/output/
 cp images/linux/boot.scr ~/output/
 cp images/linux/rootfs.tar.gz ~/output/
+```
+
+`sdk.sh`が必要な場合は以下を実行する。
+
+```shell
+cd ${TARGET_HOSTNAME}/images/linux/
+petalinux-build --sdk
 ```
