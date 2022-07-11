@@ -1,13 +1,25 @@
 # Petalinuxのビルド
 
-事前に<https://japan.xilinx.com/support/download/index.html/content/xilinx/ja/downloadNav/embedded-design-tools.html>から`petalinux-v2020.2-final-installer.run`をダウンロードする。
+事前に<https://japan.xilinx.com/support/download/index.html/content/xilinx/ja/downloadNav/embedded-design-tools.html>から`petalinux-v2021.1-final-installer.run`をダウンロードする。
 
 ```shell
-$ sha512sum petalinux-v2020.2-final-installer.run
-3aa66cb6b604c5d58f92a7d6bc9efd81a4b2b2720282c8b0610a4bb6dc64f9147fd882f22dd39dd6ba7268187556e674365f25c69f0e1645a0335e567e51f1c7  petalinux-v2020.2-final-installer.run
+$ md5sum petalinux-v2021.1-final-installer.run
+a44e1ff42ef3eedc322a72d790b1931d  petalinux-v2021.1-final-installer.run
 ```
 
+また
+
+```shell
+mkdir -p $HOME/output
+mkdir -p $HOME/petalinux
+```
+
+また、ハードウェアプラットフォームファイルを`$HOME/output`以下に用意しておく必要がある。  
+以下では`kv260_hardware_platform.xsa`とする。
+
 ## Dockerイメージのビルド
+
+Petalinuxのビルド用のDockerイメージをビルドする。
 
 ```shell
 ./scripts/docker_build.sh
@@ -21,6 +33,8 @@ docker rename build_petalinux build_petalinux.backup
 
 ## Dockerコンテナの起動
 
+Petalinuxのビルド用のDockerコンテナを起動する。
+
 ```shell
 ./scripts/docker_run.sh
 ```
@@ -28,26 +42,29 @@ docker rename build_petalinux build_petalinux.backup
 ### 依存パッケージのインストール
 
 ```shell
-sudo /tools/Xilinx/Vitis/2020.2/scripts/installLibs.sh
+sudo /tools/Xilinx/Vitis/2021.1/scripts/installLibs.sh
 ```
 
-### config
+### ビルド設定
+
+ビルド設定を行う。
 
 ```shell
-TARGET_HOSTNAME=coconut-milk
-XSA_DIR=${HOME}/output/xsa
-
+source settings.sh
+petalinux-upgrade -u 'http://petalinux.xilinx.com/sswreleases/rel-v2021/sdkupdate/2021.1_update1/' -p 'aarch64' --wget-args "--wait 1 -nH --cut-dirs=4"
 petalinux-util --webtalk off
-petalinux-create --type project --template zynq --name ${TARGET_HOSTNAME}
-cd ${TARGET_HOSTNAME}
-petalinux-config --get-hw-description=${XSA_DIR}
+petalinux-create --type project --source xilinx-k26-starterkit-v2021.1-final.bsp
+cp output/kv260_hardware_platform.xsa xilinx-k26-starterkit-2021.1/
+cd xilinx-k26-starterkit-2021.1
+petalinux-config --get-hw-description=kv260_hardware_platform.xsa --silent
+petalinux-config --component rootfs
 ```
 
 設定画面で、rootfsのfilesystemをext4に変更する。
 
 - `Image Packaging Configuration` → `Root filesystem type` → `EXT4`
 
-`user-rootfsconfig`に以下を追記しておく。
+`user-rootfsconfig`の例を以下に追記しておく。
 
 ```shell
 $ cat project-spec/meta-user/conf/user-rootfsconfig
@@ -79,7 +96,10 @@ petalinux-config --component kernel --silentconfig
 petalinux-config --component rootfs --silentconfig
 ```
 
-### build
+### Petalinuxのビルド
+
+生成物を確認しながら、順にビルドしていく。
+
 
 ```shell
 petalinux-build --component kernel
@@ -117,11 +137,12 @@ $ ls images/linux/
 boot.scr  image.ub  pxelinux.cfg  rootfs.cpio  rootfs.cpio.gz  rootfs.cpio.gz.u-boot  rootfs.jffs2  rootfs.manifest  rootfs.tar.gz  system.dtb  u-boot.bin  u-boot.elf  uImage  vmlinux  zImage  zynq_fsbl.elf
 ```
 
-### package
+### ブートイメージの生成
+
+microSDに書き込むファイルを生成する。
 
 ```shell
-cp ${HOME}/petalinux/Cora-Z7-07S/base.bit images/linux/system.bit
-petalinux-package --force --boot --fsbl ./images/linux/zynq_fsbl.elf --fpga ./images/linux/system.bit --u-boot # --bif boot.bif
+petalinux-package --force --boot --fsbl ./images/linux/zynqmp_fsbl.elf --u-boot
 ```
 
 ```shell
@@ -129,6 +150,8 @@ $ ls images/linux/
 BOOT.BIN  image.ub      rootfs.cpio     rootfs.cpio.gz.u-boot  rootfs.manifest  system.bit  u-boot.bin  uImage   zImage
 boot.scr  pxelinux.cfg  rootfs.cpio.gz  rootfs.jffs2           rootfs.tar.gz    system.dtb  u-boot.elf  vmlinux  zynq_fsbl.elf
 ```
+
+ホスト側に必要なファイルをコピーする。
 
 ```shell
 cp images/linux/BOOT.BIN ~/output/
@@ -140,6 +163,5 @@ cp images/linux/rootfs.tar.gz ~/output/
 `sdk.sh`が必要な場合は以下を実行する。
 
 ```shell
-cd ${TARGET_HOSTNAME}/images/linux/
 petalinux-build --sdk
 ```
