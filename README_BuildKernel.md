@@ -159,6 +159,12 @@ cp images/linux/boot.scr ~/output/
 cp images/linux/rootfs.tar.gz ~/output/
 ```
 
+`images/linux`はアプリケーションプロジェクトの`Root FS`の参照先として使用するため、必要な場合はホスト側にコピーする。
+
+```shell
+cp -r images ~/output/
+```
+
 `sdk.sh`が必要な場合は以下を実行する。
 
 ```shell
