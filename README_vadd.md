@@ -272,7 +272,7 @@ $ sudo xmutil listapps
 Kria KV260上でホストプログラムをビルドする場合には以下を実行する。
 
 ```shell
-g++ -Wall -g -std=c++11 ../../src/host.cpp -o app.exe -I/usr/include/xrt -lOpenCL -lpthread -lrt -lstdc++
+g++ -Wall -g -std=c++11 host.cpp -o vadd -I/usr/include/xrt -lOpenCL -lpthread -lrt -lstdc++
 ```
 
 なお、以下を事前に実行していないとエラーになることがある。
