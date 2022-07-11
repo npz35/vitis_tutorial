@@ -7,11 +7,10 @@ $ md5sum petalinux-v2021.1-final-installer.run
 a44e1ff42ef3eedc322a72d790b1931d  petalinux-v2021.1-final-installer.run
 ```
 
-また
+また`$HOME/output`を作成しておく必要がある。
 
 ```shell
 mkdir -p $HOME/output
-mkdir -p $HOME/petalinux
 ```
 
 また、ハードウェアプラットフォームファイルを`$HOME/output`以下に用意しておく必要がある。  
