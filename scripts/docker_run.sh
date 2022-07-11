@@ -1,6 +1,6 @@
 #!/bin/bash
 
-USER_NAME=np
+USER_NAME=$USER
 
 docker run --interactive --tty --privileged \
     --env DISPLAY=$DISPLAY \
