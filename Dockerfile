@@ -74,15 +74,15 @@ ENV HOME=/home/${USER_NAME}
 
 WORKDIR ${HOME}
 
-COPY --chown=${USER_NAME} petalinux-v2021.1-final-installer.run ${HOME}/petalinux-v2021.1-final-installer.run
-RUN yes | ./petalinux-v2021.1-final-installer.run --skip_license && \
-    rm ./petalinux-v2021.1-final-installer.run
+ARG VERSION
 
-COPY --chown=${USER_NAME} system-user.dtsi ${HOME}/etc/template/project/common/project-spec/meta-user/recipes-bsp/device-tree/files/system-user.dtsi
+COPY --chown=${USER_NAME} petalinux-v${VERSION}-final-installer.run ${HOME}/petalinux-v${VERSION}-final-installer.run
+RUN yes | ./petalinux-v${VERSION}-final-installer.run --skip_license && \
+    rm ./petalinux-v${VERSION}-final-installer.run
 
 RUN bash -c "echo 'export PATH=/opt/qemu/bin:/opt/crosstool-ng/bin:\${PATH}' >> .bashrc" && \
-    bash -c "echo 'source /tools/Xilinx/Vivado/2021.1/settings64.sh' >> .bashrc" && \
-    bash -c "echo 'source /tools/Xilinx/Vitis/2021.1/settings64.sh' >> .bashrc" && \
-    bash -c "echo 'source /tools/Xilinx/Vitis_HLS/2021.1/settings64.sh' >> .bashrc" && \
+    bash -c "echo 'source /tools/Xilinx/Vivado/${VERSION}/settings64.sh' >> .bashrc" && \
+    bash -c "echo 'source /tools/Xilinx/Vitis/${VERSION}/settings64.sh' >> .bashrc" && \
+    bash -c "echo 'source /tools/Xilinx/Vitis_HLS/${VERSION}/settings64.sh' >> .bashrc" && \
     bash -c "echo 'source \${HOME}/settings.sh' >> .bashrc" && \
-    bash -c "echo 'echo \"Please execute sudo /tools/Xilinx/Vitis/2021.1/scripts/installLibs.sh\"' >> .bashrc"
+    bash -c "echo 'echo \"Please execute sudo /tools/Xilinx/Vitis/${VERSION}/scripts/installLibs.sh\"' >> .bashrc"
