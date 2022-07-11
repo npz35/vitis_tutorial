@@ -146,8 +146,8 @@ cp -r $HOME/output/images <path>/kv260_custom_plnx/
 - プロジェクト名：`vadd`
 - Domain：`linux on psu_cortexa53`
 - Sys_root path：`<path>/kv260_custom_pkg/sysroots/cortexa72-cortexa53-xilinx-linux`
-- Root FS：`<path>/kv260_custom_plnx/images/linux`
-- Kernel Image：`<path>/kv260_custom_plnx/images/linux`
+- Root FS：`<path>/kv260_custom_plnx/images/linux/rootfs.ext4`
+- Kernel Image：`<path>/kv260_custom_plnx/images/linux/Image`
 
 `Acceleration templates with PL and AIE accelerators`の`Vector Addition`を選択する。
 
