@@ -268,3 +268,15 @@ $ sudo xmutil listapps
 ```
 
 なお、2022年7月11日時点で、Vitis 2021.1の`Vector Addition`から作成するホストプログラムには不備があるため、出力は正しく得られていない。
+
+Kria KV260上でホストプログラムをビルドする場合には以下を実行する。
+
+```shell
+g++ -Wall -g -std=c++11 ../../src/host.cpp -o app.exe -I/usr/include/xrt -lOpenCL -lpthread -lrt -lstdc++
+```
+
+なお、以下を事前に実行していないとエラーになることがある。
+
+```shell
+sudo ln -s /usr/lib/libOpenCL.so.1 /usr/lib/libOpenCL.so
+```
