@@ -235,6 +235,18 @@ sudo dnf install \
   opencl-headers-dev
 ```
 
+ロードされているカーネルモジュールを確認する。
+
+```shell
+lsmod
+```
+
+`zocl`が含まれていない場合は、`zocl`のカーネルモジュールをロードする。
+
+```shell
+sudo insmod `find /lib/modules -name zocl.ko`
+```
+
 vaddをロードする。
 
 ```shell
