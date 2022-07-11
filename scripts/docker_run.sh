@@ -9,7 +9,6 @@ docker run --interactive --tty --privileged \
     --volume $HOME/.Xauthority:/home/${USER_NAME}/.Xauthority \
     --volume /tools/Xilinx:/tools/Xilinx:ro \
     --volume $HOME/output:/home/${USER_NAME}/output \
-    --volume $HOME/vitis_tutorial/petalinux:/home/${USER_NAME}/petalinux \
     --name build_petalinux \
     kv260/petalinux-builder:20.04 \
     /bin/bash
