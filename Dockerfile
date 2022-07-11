@@ -80,8 +80,7 @@ COPY --chown=${USER_NAME} petalinux-v${VERSION}-final-installer.run ${HOME}/peta
 RUN yes | ./petalinux-v${VERSION}-final-installer.run --skip_license && \
     rm ./petalinux-v${VERSION}-final-installer.run
 
-RUN bash -c "echo 'export PATH=/opt/qemu/bin:/opt/crosstool-ng/bin:\${PATH}' >> .bashrc" && \
-    bash -c "echo 'source /tools/Xilinx/Vivado/${VERSION}/settings64.sh' >> .bashrc" && \
+RUN bash -c "echo 'source /tools/Xilinx/Vivado/${VERSION}/settings64.sh' >> .bashrc" && \
     bash -c "echo 'source /tools/Xilinx/Vitis/${VERSION}/settings64.sh' >> .bashrc" && \
     bash -c "echo 'source /tools/Xilinx/Vitis_HLS/${VERSION}/settings64.sh' >> .bashrc" && \
     bash -c "echo 'source \${HOME}/settings.sh' >> .bashrc" && \
