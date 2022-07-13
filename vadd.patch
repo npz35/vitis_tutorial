@@ -1,0 +1,93 @@
+diff --git a/vadd.cpp b/vadd.cpp
+index 13597e6..8437e4c 100755
+--- a/vadd.cpp
++++ b/vadd.cpp
+@@ -53,21 +53,20 @@ ALL TIMES.
+ #include <iostream>
+ #include "vadd.h"
+ 
+-static const int DATA_SIZE = 4096;
+-
+ static const std::string error_message =
+     "Error: Result mismatch:\n"
+     "i = %d CPU result = %d Device result = %d\n";
+ 
+ int main(int argc, char* argv[]) {
+-
+     //TARGET_DEVICE macro needs to be passed from gcc command line
+-    if(argc != 2) {
+-		std::cout << "Usage: " << argv[0] <<" <xclbin>" << std::endl;
++    if(argc != 3) {
++		std::cout << "Usage: " << argv[0] <<" <xclbin> <data size>" << std::endl;
+ 		return EXIT_FAILURE;
+ 	}
+ 
+     std::string xclbinFilename = argv[1];
++    const int DATA_SIZE = std::stoi(argv[2]);
++    printf("DATA_SIZE : %d\n", DATA_SIZE);
+     
+     // Compute the size of array in bytes
+     size_t size_in_bytes = DATA_SIZE * sizeof(int);
+@@ -136,11 +135,15 @@ int main(int argc, char* argv[]) {
+     // OpenCL function that is executed on the FPGA. 
+     OCL_CHECK(err, krnl_vector_add = cl::Kernel(program,"krnl_vadd", &err));
+ 
++    std::vector<int, aligned_allocator<int>> ptr_a(size_in_bytes);
++    std::vector<int, aligned_allocator<int>> ptr_b(size_in_bytes);
++    std::vector<int, aligned_allocator<int>> ptr_result(size_in_bytes);
++
+     // These commands will allocate memory on the Device. The cl::Buffer objects can
+     // be used to reference the memory locations on the device. 
+-    OCL_CHECK(err, cl::Buffer buffer_a(context, CL_MEM_READ_ONLY, size_in_bytes, NULL, &err));
+-    OCL_CHECK(err, cl::Buffer buffer_b(context, CL_MEM_READ_ONLY, size_in_bytes, NULL, &err));
+-    OCL_CHECK(err, cl::Buffer buffer_result(context, CL_MEM_WRITE_ONLY, size_in_bytes, NULL, &err));
++    OCL_CHECK(err, cl::Buffer buffer_a(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY, size_in_bytes, ptr_a.data(), &err));
++    OCL_CHECK(err, cl::Buffer buffer_b(context, CL_MEM_USE_HOST_PTR | CL_MEM_READ_ONLY, size_in_bytes, ptr_b.data(), &err));
++    OCL_CHECK(err, cl::Buffer buffer_result(context, CL_MEM_USE_HOST_PTR | CL_MEM_WRITE_ONLY, size_in_bytes, ptr_result.data(), &err));
+     
+     //set the kernel Arguments
+     int narg=0;
+@@ -149,13 +152,12 @@ int main(int argc, char* argv[]) {
+     OCL_CHECK(err, err = krnl_vector_add.setArg(narg++,buffer_result));
+     OCL_CHECK(err, err = krnl_vector_add.setArg(narg++,DATA_SIZE));
+ 
+-    //We then need to map our OpenCL buffers to get the pointers
+-    int *ptr_a;
+-    int *ptr_b;
+-    int *ptr_result;
+-    OCL_CHECK(err, ptr_a = (int*)q.enqueueMapBuffer (buffer_a , CL_TRUE , CL_MAP_WRITE , 0, size_in_bytes, NULL, NULL, &err));
+-    OCL_CHECK(err, ptr_b = (int*)q.enqueueMapBuffer (buffer_b , CL_TRUE , CL_MAP_WRITE , 0, size_in_bytes, NULL, NULL, &err));
+-    OCL_CHECK(err, ptr_result = (int*)q.enqueueMapBuffer (buffer_result , CL_TRUE , CL_MAP_READ , 0, size_in_bytes, NULL, NULL, &err));
++    // Initialize the vectors used in the test
++    for (int i = 0; i < DATA_SIZE; i++) {
++        ptr_a[i] = i + 1;
++        ptr_b[i] = i + 2;
++        ptr_result[i] = 0;
++    }
+ 
+     // Data will be migrated to kernel space
+     OCL_CHECK(err, err = q.enqueueMigrateMemObjects({buffer_a,buffer_b},0/* 0 means from host*/));
+@@ -166,9 +168,9 @@ int main(int argc, char* argv[]) {
+     // The result of the previous kernel execution will need to be retrieved in
+     // order to view the results. This call will transfer the data from FPGA to
+     // source_results vector
+-    OCL_CHECK(err, q.enqueueMigrateMemObjects({buffer_result},CL_MIGRATE_MEM_OBJECT_HOST));
++    OCL_CHECK(err, err = q.enqueueMigrateMemObjects({buffer_result},CL_MIGRATE_MEM_OBJECT_HOST));
+ 
+-    OCL_CHECK(err, q.finish());
++    OCL_CHECK(err, err = q.finish());
+ 
+     //Verify the result
+     int match = 0;
+@@ -181,11 +183,6 @@ int main(int argc, char* argv[]) {
+         }
+     }
+ 
+-    OCL_CHECK(err, err = q.enqueueUnmapMemObject(buffer_a , ptr_a));
+-    OCL_CHECK(err, err = q.enqueueUnmapMemObject(buffer_b , ptr_b));
+-    OCL_CHECK(err, err = q.enqueueUnmapMemObject(buffer_result , ptr_result));
+-    OCL_CHECK(err, err = q.finish());
+-
+     std::cout << "TEST " << (match ? "FAILED" : "PASSED") << std::endl; 
+     return (match ? EXIT_FAILURE :  EXIT_SUCCESS);
+ 
