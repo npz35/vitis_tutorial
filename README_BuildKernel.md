@@ -7,6 +7,13 @@ $ md5sum petalinux-v2021.1-final-installer.run
 a44e1ff42ef3eedc322a72d790b1931d  petalinux-v2021.1-final-installer.run
 ```
 
+事前に<https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/1641152513/Kria+K26+SOM>から`xilinx-k26-starterkit-v2021.1-final.bsp`をダウンロードする。
+
+```shell
+$ md5sum xilinx-k26-starterkit-v2021.1-final.bsp
+584f769158424e1b95279b1fed591f84  xilinx-k26-starterkit-v2021.1-final.bsp
+```
+
 また`$HOME/output`を作成しておく必要がある。
 
 ```shell
@@ -59,10 +66,6 @@ petalinux-config --get-hw-description=kv260_hardware_platform.xsa --silent
 petalinux-config --component rootfs
 ```
 
-設定画面で、rootfsのfilesystemをext4に変更する。
-
-- `Image Packaging Configuration` → `Root filesystem type` → `EXT4`
-
 `user-rootfsconfig`の例を以下に追記しておく。
 
 ```shell
@@ -82,6 +85,12 @@ CONFIG_packagegroup-petalinux-opencv-dev
 CONFIG_cmake
 CONFIG_tmux
 CONFIG_clinfo
+```
+
+追加したいパッケージを有効化する。
+
+```shell
+petalinux-config --component rootfs
 ```
 
 ```shell
