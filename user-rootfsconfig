@@ -30,6 +30,7 @@ CONFIG_fpga-manager-script
 CONFIG_gdb
 CONFIG_git-bash-completion
 CONFIG_git
+CONFIG_glibc-utils
 CONFIG_grep
 CONFIG_gzip
 CONFIG_haveged
@@ -41,6 +42,7 @@ CONFIG_ldd
 CONFIG_less
 CONFIG_libgcc-dev
 CONFIG_libv4l
+CONFIG_localedef
 CONFIG_lsof
 CONFIG_make
 CONFIG_mtd-utils
