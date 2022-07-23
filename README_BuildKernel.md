@@ -63,8 +63,12 @@ petalinux-create --type project --source xilinx-k26-starterkit-v2021.1-final.bsp
 cp output/kv260_hardware_platform.xsa xilinx-k26-starterkit-2021.1/
 cd xilinx-k26-starterkit-2021.1
 petalinux-config --get-hw-description=kv260_hardware_platform.xsa --silent
-petalinux-config --component rootfs
+petalinux-config
 ```
+
+設定画面で、rootfsのfilesystemをext4に変更する。
+
+- `Image Packaging Configuration` → `Root filesystem type` → `EXT4`
 
 `user-rootfsconfig`の例を以下に追記しておく。
 
