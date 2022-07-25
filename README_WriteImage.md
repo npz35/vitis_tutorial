@@ -61,7 +61,7 @@ sync
 第二パーティションにデータを焼く。
 
 ```shell
-sudo cp rootfs.tar.gz /media/rootfs/
+sudo tar xzvf rootfs.tar.gz -C /media/rootfs/
 sync
 ```
 

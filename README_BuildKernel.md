@@ -66,10 +66,6 @@ petalinux-config --get-hw-description=kv260_hardware_platform.xsa --silent
 petalinux-config
 ```
 
-設定画面で、rootfsのfilesystemをext4に変更する。
-
-- `Image Packaging Configuration` → `Root filesystem type` → `EXT4`
-
 `user-rootfsconfig`の例を以下に追記しておく。
 
 ```shell
