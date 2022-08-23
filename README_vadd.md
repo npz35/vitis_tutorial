@@ -78,6 +78,14 @@ pwd
 ./sdk.sh -d <path>/kv260_custom_pkg
 ```
 
+`kv260_custom_plnx/images/linux/`へ以下をコピーする。  
+`<path>`は`pwd`で確認したパスを指定する。
+
+```shell
+mkdir -p <path>/kv260_custom_plnx/
+cp -r $HOME/output/images <path>/kv260_custom_plnx/
+```
+
 `kv260_custom_plnx/images/linux/`から以下をコピーする。  
 `<path>`は`pwd`で確認したパスを指定する。
 
@@ -85,12 +93,13 @@ pwd
 cd <path>/kv260_custom_pkg/pfm
 mkdir boot
 mkdir sd_dir
+cd ../../kv260_custom_plnx/images/linux/
 cp zynqmp_fsbl.elf \
   pmufw.elf \
   bl31.elf \
   u-boot-dtb.elf \
   system.dtb \
-  boot/
+  ../../../kv260_custom_pkg/pfm/boot/
 ```
 
 必要な場合は`sd_dir`に`boot.scr`と`system.dtb`をコピーしておく。
@@ -98,7 +107,7 @@ cp zynqmp_fsbl.elf \
 ```shell
 cp boot.scr \
   system.dtb \
-  sd_dir/
+  ../../../kv260_custom_pkg/pfm/sd_dir/
 ```
 
 Vitisを起動する。  
@@ -131,13 +140,7 @@ platforminfo kv260_custom.xpfm
 
 ## プログラムのビルド・実行
 
-<https://github.com/Xilinx/Vitis-Tutorials/blob/2021.1/Vitis_Platform_Creation/Design_Tutorials/01-Edge-KV260/step4.md>を参考にプログラムをビルド・実行する。  
-`<path>`は前節で`pwd`で確認したパスを指定する。
-
-```shell
-mkdir -p <path>/kv260_custom_plnx/
-cp -r $HOME/output/images <path>/kv260_custom_plnx/
-```
+<https://github.com/Xilinx/Vitis-Tutorials/blob/2021.1/Vitis_Platform_Creation/Design_Tutorials/01-Edge-KV260/step4.md>を参考にプログラムをビルド・実行する。
 
 アプリケーションプロジェクトを作成する。  
 `<path>`は前節で`pwd`で確認したパスを指定する。
