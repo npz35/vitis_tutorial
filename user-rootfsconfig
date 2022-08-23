@@ -68,8 +68,6 @@ CONFIG_pciutils
 CONFIG_perf
 CONFIG_pkgconfig
 CONFIG_protobuf
-CONFIG_python-shell
-CONFIG_python-terminal
 CONFIG_python3-core
 CONFIG_python3-numpy
 CONFIG_python3-shell
