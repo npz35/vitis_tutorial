@@ -1,7 +1,7 @@
 # Petalinuxのビルド
 
 事前に<https://japan.xilinx.com/support/download/index.html/content/xilinx/ja/downloadNav/embedded-design-tools.html>から`petalinux-v2022.1-04191534-installer.run`をダウンロードする。  
-移行では`petalinux-v2022.1-final-installer.run`とする。
+以降では`petalinux-v2022.1-final-installer.run`とする。
 
 ```shell
 $ md5sum petalinux-v2022.1-final-installer.run
