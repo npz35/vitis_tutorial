@@ -1,17 +1,18 @@
 # Petalinuxのビルド
 
-事前に<https://japan.xilinx.com/support/download/index.html/content/xilinx/ja/downloadNav/embedded-design-tools.html>から`petalinux-v2021.1-final-installer.run`をダウンロードする。
+事前に<https://japan.xilinx.com/support/download/index.html/content/xilinx/ja/downloadNav/embedded-design-tools.html>から`petalinux-v2022.1-04191534-installer.run`をダウンロードする。  
+以降では`petalinux-v2022.1-final-installer.run`とする。
 
 ```shell
-$ md5sum petalinux-v2021.1-final-installer.run
-a44e1ff42ef3eedc322a72d790b1931d  petalinux-v2021.1-final-installer.run
+$ md5sum petalinux-v2022.1-final-installer.run
+5ea0aee3ab9d4c1b138119b0b6613a17  petalinux-v2022.1-final-installer.run
 ```
 
-事前に<https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/1641152513/Kria+K26+SOM>から`xilinx-k26-starterkit-v2021.1-final.bsp`をダウンロードする。
+事前に<https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/1641152513/Kria+K26+SOM>から`xilinx-kv260-starterkit-v2022.1-05140151.bsp`をダウンロードする。
 
 ```shell
-$ md5sum xilinx-k26-starterkit-v2021.1-final.bsp
-584f769158424e1b95279b1fed591f84  xilinx-k26-starterkit-v2021.1-final.bsp
+$ md5sum xilinx-kv260-starterkit-v2022.1-05140151.bsp
+a1cc4ea74df2293f3630af0336b3719f  xilinx-kv260-starterkit-v2022.1-05140151.bsp
 ```
 
 また`$HOME/output`を作成しておく必要がある。
@@ -21,7 +22,7 @@ mkdir -p $HOME/output
 ```
 
 また、ハードウェアプラットフォームファイルを`$HOME/output`以下に用意しておく必要がある。  
-以下では`kv260_hardware_platform.xsa`とする。
+以下では`kv260_custom_platform.xsa`とする。
 
 ## Dockerイメージのビルド
 
@@ -48,7 +49,7 @@ Petalinuxのビルド用のDockerコンテナを起動する。
 ### 依存パッケージのインストール
 
 ```shell
-sudo /tools/Xilinx/Vitis/2021.1/scripts/installLibs.sh
+sudo /tools/Xilinx/Vitis/2022.1/scripts/installLibs.sh
 ```
 
 ### ビルド設定
@@ -57,12 +58,12 @@ sudo /tools/Xilinx/Vitis/2021.1/scripts/installLibs.sh
 
 ```shell
 source settings.sh
-petalinux-upgrade -u 'http://petalinux.xilinx.com/sswreleases/rel-v2021/sdkupdate/2021.1_update1/' -p 'aarch64' --wget-args "--wait 1 -nH --cut-dirs=4"
-petalinux-util --webtalk off
-petalinux-create --type project --source xilinx-k26-starterkit-v2021.1-final.bsp
-cp output/kv260_hardware_platform.xsa xilinx-k26-starterkit-2021.1/
-cd xilinx-k26-starterkit-2021.1
-petalinux-config --get-hw-description=kv260_hardware_platform.xsa --silent
+petalinux-upgrade -u http://petalinux.xilinx.com/sswreleases/rel-v2022/sdkupdate/2022.1_update2/ -p "aarch64" --wget-args "--wait 1 -nH --cut-dirs=4"
+# petalinux-util --webtalk off
+petalinux-create --type project --source xilinx-kv260-starterkit-v2022.1-05140151.bsp
+cp output/kv260_custom_platform.xsa xilinx-kv260-starterkit-2022.1
+cd xilinx-kv260-starterkit-2022.1
+petalinux-config --get-hw-description=kv260_custom_platform.xsa --silent
 petalinux-config
 ```
 
@@ -150,7 +151,11 @@ boot.scr  image.ub  pxelinux.cfg  rootfs.cpio  rootfs.cpio.gz  rootfs.cpio.gz.u-
 microSDに書き込むファイルを生成する。
 
 ```shell
-petalinux-package --force --boot --fsbl ./images/linux/zynqmp_fsbl.elf --u-boot
+petalinux-package \
+  --wic \
+  --images-dir images/linux/ \
+  --bootfiles "ramdisk.cpio.gz.u-boot,boot.scr,Image,system.dtb,system-zynqmp-sck-kv-g-revB.dtb" \
+  --disk-name "mmcblk1"
 ```
 
 ```shell
@@ -162,10 +167,7 @@ boot.scr  pxelinux.cfg  rootfs.cpio.gz  rootfs.jffs2           rootfs.tar.gz    
 ホスト側に必要なファイルをコピーする。
 
 ```shell
-cp images/linux/BOOT.BIN ~/output/
-cp images/linux/image.ub ~/output/
-cp images/linux/boot.scr ~/output/
-cp images/linux/rootfs.tar.gz ~/output/
+cp images/linux/petalinux-sdimage.wic ~/output/
 ```
 
 `images/linux`はアプリケーションプロジェクトの`Root FS`の参照先として使用するため、必要な場合はホスト側にコピーする。
