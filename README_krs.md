@@ -75,8 +75,36 @@ colcon build \
     ament_acceleration \
     ament_vitis \
     vitis_common \
+    ros2acceleration \
     vadd_publisher \
     offloaded_doublevadd_publisher
+colcon build \
+  --build-base=build-kv260 \
+  --install-base=install-kv260 \
+  --merge-install \
+  --mixin kv260 \
+  --cmake-args -DTRACETOOLS_DISABLED=ON \
+  --packages-select simple_adder
+colcon build \
+  --build-base=build-kv260 \
+  --install-base=install-kv260 \
+  --merge-install \
+  --mixin kv260 \
+  --cmake-args \
+    -DNOKERNELS=true \
+  --packages-up-to \
+    perception_2nodes \
+    image_pipeline_examples
+colcon build \
+  --build-base=build-kv260 \
+  --install-base=install-kv260 \
+  --merge-install \
+  --mixin kv260 \
+  --cmake-args \
+    -DNOKERNELS=false \
+  --packages-select \
+    image_proc \
+    perception_2nodes
 ```
 
 ホスト側へ必要なデータをコピーする。
