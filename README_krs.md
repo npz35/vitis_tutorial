@@ -156,3 +156,39 @@ SDイメージを作成する。
 ```shell
 colcon acceleration linux vanilla --install-dir install-kv260
 ```
+
+microSDカードを初期化する。  
+microSDカード上のデータは全て消えるため、注意する。
+
+```shell
+sudo XAUTHORITY=~/.Xauthority gparted
+```
+
+SDイメージをmicroSDカードに焼く。  
+`/dev/sda`はmicroSDカードのデバイスパスに適宜置き換える。
+
+```shell
+cd $HOME/output/krs_ws/acceleration/firmware/kv260/
+sudo dd if=sd_card.img of=/dev/sda bs=1M status=progress
+```
+
+microSDカードのブート領域をマウントする。
+
+```shell
+sudo mkdir -p /media/BOOT
+sudo mount /dev/sda1 /media/BOOT
+```
+
+PetaLinux Toolsで生成した`system.dtb`で上書きする。
+
+```shell
+sudo cp $HOME/output/images/linux/system.dtb /media/BOOT/
+sync
+```
+
+microSDカードをアンマウントする。
+
+```shell
+sudo umount /media/BOOT/
+sudo eject /dev/sda
+```
