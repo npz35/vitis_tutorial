@@ -53,7 +53,9 @@ Dockerコンテナの中でROSパッケージをビルドする。
 
 ```shell
 cd $HOME/krs_ws
-colcon build --merge-install
+colcon build \
+  --merge-install \
+  --cmake-args -DTRACETOOLS_DISABLED=ON
 ```
 
 ファームウェアを選択する。
@@ -71,12 +73,43 @@ colcon build \
   --install-base=install-kv260 \
   --merge-install \
   --mixin kv260 \
+  --cmake-args -DTRACETOOLS_DISABLED=ON \
   --packages-select \
     ament_acceleration \
     ament_vitis \
     vitis_common \
+    ros2acceleration \
     vadd_publisher \
     offloaded_doublevadd_publisher
+colcon build \
+  --build-base=build-kv260 \
+  --install-base=install-kv260 \
+  --merge-install \
+  --mixin kv260 \
+  --cmake-args -DTRACETOOLS_DISABLED=ON \
+  --packages-select simple_adder
+colcon build \
+  --build-base=build-kv260 \
+  --install-base=install-kv260 \
+  --merge-install \
+  --mixin kv260 \
+  --cmake-args \
+    -DNOKERNELS=true \
+    -DTRACETOOLS_DISABLED=ON \
+  --packages-up-to \
+    perception_2nodes \
+    image_pipeline_examples
+colcon build \
+  --build-base=build-kv260 \
+  --install-base=install-kv260 \
+  --merge-install \
+  --mixin kv260 \
+  --cmake-args \
+    -DNOKERNELS=false \
+    -DTRACETOOLS_DISABLED=ON \
+  --packages-select \
+    image_proc \
+    perception_2nodes
 ```
 
 ホスト側へ必要なデータをコピーする。
@@ -122,4 +155,40 @@ SDイメージを作成する。
 
 ```shell
 colcon acceleration linux vanilla --install-dir install-kv260
+```
+
+microSDカードを初期化する。  
+microSDカード上のデータは全て消えるため、注意する。
+
+```shell
+sudo XAUTHORITY=~/.Xauthority gparted
+```
+
+SDイメージをmicroSDカードに焼く。  
+`/dev/sda`はmicroSDカードのデバイスパスに適宜置き換える。
+
+```shell
+cd $HOME/output/krs_ws/acceleration/firmware/kv260/
+sudo dd if=sd_card.img of=/dev/sda bs=1M status=progress
+```
+
+microSDカードのブート領域をマウントする。
+
+```shell
+sudo mkdir -p /media/BOOT
+sudo mount /dev/sda1 /media/BOOT
+```
+
+PetaLinux Toolsで生成した`system.dtb`で上書きする。
+
+```shell
+sudo cp $HOME/output/images/linux/system.dtb /media/BOOT/
+sync
+```
+
+microSDカードをアンマウントする。
+
+```shell
+sudo umount /media/BOOT/
+sudo eject /dev/sda
 ```
