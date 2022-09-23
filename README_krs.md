@@ -53,7 +53,9 @@ Dockerコンテナの中でROSパッケージをビルドする。
 
 ```shell
 cd $HOME/krs_ws
-colcon build --merge-install
+colcon build \
+  --merge-install \
+  --cmake-args -DTRACETOOLS_DISABLED=ON
 ```
 
 ファームウェアを選択する。
@@ -71,6 +73,7 @@ colcon build \
   --install-base=install-kv260 \
   --merge-install \
   --mixin kv260 \
+  --cmake-args -DTRACETOOLS_DISABLED=ON \
   --packages-select \
     ament_acceleration \
     ament_vitis \
@@ -92,6 +95,7 @@ colcon build \
   --mixin kv260 \
   --cmake-args \
     -DNOKERNELS=true \
+    -DTRACETOOLS_DISABLED=ON \
   --packages-up-to \
     perception_2nodes \
     image_pipeline_examples
@@ -102,6 +106,7 @@ colcon build \
   --mixin kv260 \
   --cmake-args \
     -DNOKERNELS=false \
+    -DTRACETOOLS_DISABLED=ON \
   --packages-select \
     image_proc \
     perception_2nodes
