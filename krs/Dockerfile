@@ -33,8 +33,10 @@ RUN apt-get update -y -qq && \
         python3-vcstool \
         ros-humble-camera-info-manager \
         ros-humble-cv-bridge \
+        ros-humble-gazebo-ros \
         ros-humble-image-geometry \
         ros-humble-image-transport \
+        ros-humble-rqt-graph \
         ros-humble-tf2-eigen \
         ros-humble-tf2-geometry-msgs \
         ros-humble-tf2-ros \
