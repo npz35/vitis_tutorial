@@ -71,7 +71,9 @@ COPY --chown=${USER_NAME} krs_humble.repos ${HOME}/krs_humble.repos
 RUN mkdir -p ${HOME}/krs_ws/src && \
     mv krs_humble.repos ${HOME}/krs_ws/ && \
     cd ${HOME}/krs_ws && \
-    vcs import src --recursive < krs_humble.repos && \
+    vcs import src --recursive < krs_humble.repos
+
+RUN cd ${HOME}/krs_ws && \
     . /opt/ros/humble/setup.sh && \
     colcon build \
         --merge-install \
