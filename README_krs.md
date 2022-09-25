@@ -130,7 +130,8 @@ export ROS_DISTRO=humble
 LANG=C
 colcon build --merge-install \
   --packages-select \
-    colcon-hardware-acceleration
+    colcon-hardware-acceleration \
+    ros2acceleration
 ```
 
 ファームウェアのシンボリックリンクを更新する。
