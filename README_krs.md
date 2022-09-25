@@ -167,6 +167,12 @@ cd $HOME/output/krs_ws/acceleration/firmware/kv260/
 sudo dd if=sd_card.img of=/dev/sda bs=1M status=progress
 ```
 
+第二パーティションをサイズ上限まで拡張する。
+
+```shell
+sudo XAUTHORITY=~/.Xauthority gparted
+```
+
 microSDカードのブート領域をマウントする。
 
 ```shell
