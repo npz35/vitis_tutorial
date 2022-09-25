@@ -79,7 +79,14 @@ RUN cd ${HOME}/krs_ws && \
         --merge-install \
         --packages-ignore \
             acceleration_firmware_kv260 \
-            perception_3nodes
+            perception_3nodes \
+            offloaded_doublevadd_publisher
+
+RUN cd ${HOME}/krs_ws && \
+    . /opt/ros/humble/setup.sh && \
+    colcon build \
+        --merge-install \
+        --packages-select acceleration_firmware_kv260
 
 RUN bash -c "echo 'source /tools/Xilinx/Vivado/2022.1/settings64.sh' >> .bashrc" && \
     bash -c "echo 'source /tools/Xilinx/Vitis/2022.1/settings64.sh' >> .bashrc" && \
