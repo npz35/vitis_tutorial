@@ -109,8 +109,8 @@ colcon build \
 ホスト側へ必要なデータをコピーする。
 
 ```shell
-mkdir -p $HOME/output/krs_ws
-sudo cp -r -d acceleration $HOME/output/krs_ws/
+mkdir -p $HOME/output/krs_ws/firmware
+sudo cp -r -d acceleration/firmware/kv260 $HOME/output/krs_ws/firmware/kv260
 cp -r -d src $HOME/output/krs_ws/
 cp -r -d build-kv260 $HOME/output/krs_ws/
 cp -r -d install-kv260 $HOME/output/krs_ws/
