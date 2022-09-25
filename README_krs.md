@@ -53,7 +53,9 @@ Dockerコンテナの中でROSパッケージをビルドする。
 
 ```shell
 cd $HOME/krs_ws
-colcon build --merge-install
+colcon build \
+  --merge-install \
+  --packages-ignore offloaded_doublevadd_publisher
 ```
 
 ファームウェアを選択する。
