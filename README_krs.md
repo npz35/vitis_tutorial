@@ -106,12 +106,6 @@ colcon build \
   --packages-select \
     image_proc \
     perception_2nodes
-```
-
-`ros2_tracing`をcloneして、ビルドする。
-
-```shell
-git clone https://github.com/ros2/ros2_tracing.git src/ros2_tracing -b humble
 colcon build \
   --build-base=build-kv260 \
   --install-base=install-kv260 \

@@ -80,7 +80,12 @@ RUN cd ${HOME}/krs_ws && \
         --packages-ignore \
             acceleration_firmware_kv260 \
             perception_3nodes \
-            offloaded_doublevadd_publisher
+            accelerated_doublevadd_publisher \
+            doublevadd_publisher \
+            faster_doublevadd_publisher \
+            multiple_doublevadd_publisher \
+            offloaded_doublevadd_publisher \
+            accelerated_vadd
 
 RUN cd ${HOME}/krs_ws && \
     . /opt/ros/humble/setup.sh && \

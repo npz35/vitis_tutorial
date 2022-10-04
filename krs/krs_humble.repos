@@ -45,3 +45,7 @@ repositories:
     type: git
     url: https://github.com/ros-acceleration/acceleration_examples
     version: main
+  ros2_tracing:
+    type: git
+    url: https://github.com/ros2/ros2_tracing
+    version: humble
