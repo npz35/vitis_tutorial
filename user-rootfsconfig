@@ -118,3 +118,6 @@ CONFIG_zocl
 # CONFIG_lttng-modules
 # CONFIG_lttng-tools
 # CONFIG_lttng-ust
+
+CONFIG_tcl-dev
+CONFIG_tk-dev
