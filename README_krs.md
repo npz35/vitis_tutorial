@@ -162,11 +162,11 @@ sudo XAUTHORITY=~/.Xauthority gparted
 ```
 
 SDイメージをmicroSDカードに焼く。  
-`/dev/sda`はmicroSDカードのデバイスパスに適宜置き換える。
+`/dev/sdb`はmicroSDカードのデバイスパスに適宜置き換える。
 
 ```shell
 cd $HOME/output/krs_ws/acceleration/firmware/kv260/
-sudo dd if=sd_card.img of=/dev/sda bs=1M status=progress
+sudo dd if=sd_card.img of=/dev/sdb bs=1M status=progress
 ```
 
 第二パーティションをサイズ上限まで拡張する。
@@ -179,7 +179,7 @@ microSDカードのブート領域をマウントする。
 
 ```shell
 sudo mkdir -p /media/BOOT
-sudo mount /dev/sda1 /media/BOOT
+sudo mount /dev/sdb1 /media/BOOT
 ```
 
 PetaLinux Toolsで生成した`system.dtb`で上書きする。
@@ -193,5 +193,5 @@ microSDカードをアンマウントする。
 
 ```shell
 sudo umount /media/BOOT/
-sudo eject /dev/sda
+sudo eject /dev/sdb
 ```
