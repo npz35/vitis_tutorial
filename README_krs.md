@@ -55,7 +55,7 @@ Dockerコンテナの中でROSパッケージをビルドする。
 cd $HOME/krs_ws
 colcon build \
   --merge-install \
-  --cmake-args -DTRACETOOLS_DISABLED=ON
+  --packages-ignore offloaded_doublevadd_publisher
 ```
 
 ファームウェアを選択する。
@@ -73,7 +73,7 @@ colcon build \
   --install-base=install-kv260 \
   --merge-install \
   --mixin kv260 \
-  --cmake-args -DTRACETOOLS_DISABLED=ON \
+  --cmake-args -DTRACETOOLS_LTTNG_ENABLED=true \
   --packages-select \
     ament_acceleration \
     ament_vitis \
@@ -86,7 +86,7 @@ colcon build \
   --install-base=install-kv260 \
   --merge-install \
   --mixin kv260 \
-  --cmake-args -DTRACETOOLS_DISABLED=ON \
+  --cmake-args -DTRACETOOLS_LTTNG_ENABLED=true \
   --packages-select simple_adder
 colcon build \
   --build-base=build-kv260 \
@@ -95,7 +95,7 @@ colcon build \
   --mixin kv260 \
   --cmake-args \
     -DNOKERNELS=true \
-    -DTRACETOOLS_DISABLED=ON \
+    -DTRACETOOLS_LTTNG_ENABLED=true \
   --packages-up-to \
     perception_2nodes \
     image_pipeline_examples
@@ -106,18 +106,33 @@ colcon build \
   --mixin kv260 \
   --cmake-args \
     -DNOKERNELS=false \
-    -DTRACETOOLS_DISABLED=ON \
+    -DTRACETOOLS_LTTNG_ENABLED=true \
   --packages-select \
     image_proc \
     perception_2nodes
+colcon build \
+  --build-base=build-kv260 \
+  --install-base=install-kv260 \
+  --merge-install \
+  --mixin kv260 \
+  --cmake-args \
+    -DNOKERNELS=false \
+    -DTRACETOOLS_LTTNG_ENABLED=true \
+  --packages-select \
+    ros2trace \
+    tracetools \
+    tracetools_launch \
+    tracetools_read \
+    tracetools_test \
+    tracetools_trace
 ```
 
 ホスト側へ必要なデータをコピーする。
 
 ```shell
-mkdir -p $HOME/output/krs_ws
-sudo cp -r -d acceleration $HOME/output/krs_ws/
-cp -r -d src $HOME/output/krs_ws/
+mkdir -p $HOME/output/krs_ws/firmware
+sudo cp -r -d acceleration/firmware/kv260 $HOME/output/krs_ws/firmware/kv260
+cp -r -d src $HOME/output/krs_ws/ 2> /dev/null
 cp -r -d build-kv260 $HOME/output/krs_ws/
 cp -r -d install-kv260 $HOME/output/krs_ws/
 ```
@@ -131,12 +146,12 @@ sudo chown -R $USER acceleration
 `colcon-hardware-acceleration`をビルドする。
 
 ```shell
-export PATH=/usr/bin:$PATH
-export ROS_DISTRO=humble
-LANG=C
+source /opt/ros/foxy/setup.bash
 colcon build --merge-install \
   --packages-select \
-    colcon-hardware-acceleration
+    colcon-hardware-acceleration \
+    ros2acceleration \
+    perception_2nodes
 ```
 
 ファームウェアのシンボリックリンクを更新する。
@@ -154,6 +169,9 @@ ln -s `pwd`/${BOOT_PATH} acceleration/firmware/kv260/BOOT.BIN
 SDイメージを作成する。
 
 ```shell
+export PATH=/usr/bin:$PATH
+export ROS_DISTRO=humble
+LANG=C
 colcon acceleration linux vanilla --install-dir install-kv260
 ```
 
@@ -165,30 +183,36 @@ sudo XAUTHORITY=~/.Xauthority gparted
 ```
 
 SDイメージをmicroSDカードに焼く。  
-`/dev/sda`はmicroSDカードのデバイスパスに適宜置き換える。
+`/dev/sdb`はmicroSDカードのデバイスパスに適宜置き換える。
 
 ```shell
 cd $HOME/output/krs_ws/acceleration/firmware/kv260/
-sudo dd if=sd_card.img of=/dev/sda bs=1M status=progress
+sudo dd if=sd_card.img of=/dev/sdb bs=1M status=progress
+```
+
+第二パーティションをサイズ上限まで拡張する。
+
+```shell
+sudo XAUTHORITY=~/.Xauthority gparted
 ```
 
 microSDカードのブート領域をマウントする。
 
 ```shell
-sudo mkdir -p /media/BOOT
-sudo mount /dev/sda1 /media/BOOT
+sudo mkdir -p /mnt/BOOT
+sudo mount /dev/sdb1 /mnt/BOOT
 ```
 
 PetaLinux Toolsで生成した`system.dtb`で上書きする。
 
 ```shell
-sudo cp $HOME/output/images/linux/system.dtb /media/BOOT/
+sudo cp $HOME/output/images/linux/system.dtb /mnt/BOOT/
 sync
 ```
 
 microSDカードをアンマウントする。
 
 ```shell
-sudo umount /media/BOOT/
-sudo eject /dev/sda
+sudo umount /mnt/BOOT/
+sudo eject /dev/sdb
 ```

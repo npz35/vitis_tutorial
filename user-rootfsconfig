@@ -14,7 +14,7 @@ CONFIG_bridge-utils
 CONFIG_ca-certificates
 CONFIG_can-utils
 CONFIG_ccache
-CONFIG_clinfo
+# CONFIG_clinfo
 CONFIG_cmake
 CONFIG_coreutils
 CONFIG_cpufrequtils
@@ -68,12 +68,19 @@ CONFIG_pciutils
 CONFIG_perf
 CONFIG_pkgconfig
 CONFIG_protobuf
+# CONFIG_python
+CONFIG_python3
+CONFIG_python3-bokeh
+# CONFIG_python3-bt2
 CONFIG_python3-core
+# CONFIG_python3-lttng
 CONFIG_python3-numpy
+CONFIG_python3-pandas
 CONFIG_python3-shell
 CONFIG_python3-terminal
-CONFIG_python3
-CONFIG_python
+# CONFIG_python3-tk
+CONFIG_python3-tkinter
+# CONFIG_python3-wasabi
 CONFIG_rsync
 CONFIG_run-postinsts
 CONFIG_screen
@@ -107,3 +114,10 @@ CONFIG_xz
 CONFIG_zip
 CONFIG_zocl
 
+# CONFIG_lttng
+# CONFIG_lttng-modules
+# CONFIG_lttng-tools
+# CONFIG_lttng-ust
+
+CONFIG_tcl-dev
+CONFIG_tk-dev

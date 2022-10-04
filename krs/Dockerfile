@@ -71,13 +71,27 @@ COPY --chown=${USER_NAME} krs_humble.repos ${HOME}/krs_humble.repos
 RUN mkdir -p ${HOME}/krs_ws/src && \
     mv krs_humble.repos ${HOME}/krs_ws/ && \
     cd ${HOME}/krs_ws && \
-    vcs import src --recursive < krs_humble.repos && \
+    vcs import src --recursive < krs_humble.repos
+
+RUN cd ${HOME}/krs_ws && \
     . /opt/ros/humble/setup.sh && \
     colcon build \
         --merge-install \
         --packages-ignore \
             acceleration_firmware_kv260 \
-            perception_3nodes
+            perception_3nodes \
+            accelerated_doublevadd_publisher \
+            doublevadd_publisher \
+            faster_doublevadd_publisher \
+            multiple_doublevadd_publisher \
+            offloaded_doublevadd_publisher \
+            accelerated_vadd
+
+RUN cd ${HOME}/krs_ws && \
+    . /opt/ros/humble/setup.sh && \
+    colcon build \
+        --merge-install \
+        --packages-select acceleration_firmware_kv260
 
 RUN bash -c "echo 'source /tools/Xilinx/Vivado/2022.1/settings64.sh' >> .bashrc" && \
     bash -c "echo 'source /tools/Xilinx/Vitis/2022.1/settings64.sh' >> .bashrc" && \
