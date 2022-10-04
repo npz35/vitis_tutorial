@@ -125,13 +125,12 @@ sudo chown -R $USER acceleration
 `colcon-hardware-acceleration`をビルドする。
 
 ```shell
-export PATH=/usr/bin:$PATH
-export ROS_DISTRO=humble
-LANG=C
+source /opt/ros/foxy/setup.bash
 colcon build --merge-install \
   --packages-select \
     colcon-hardware-acceleration \
-    ros2acceleration
+    ros2acceleration \
+    perception_2nodes
 ```
 
 ファームウェアのシンボリックリンクを更新する。
@@ -149,6 +148,9 @@ ln -s `pwd`/${BOOT_PATH} acceleration/firmware/kv260/BOOT.BIN
 SDイメージを作成する。
 
 ```shell
+export PATH=/usr/bin:$PATH
+export ROS_DISTRO=humble
+LANG=C
 colcon acceleration linux vanilla --install-dir install-kv260
 ```
 
