@@ -108,6 +108,25 @@ colcon build \
     perception_2nodes
 ```
 
+`ros2_tracing`をcloneして、ビルドする。
+
+```shell
+git clone https://github.com/ros2/ros2_tracing.git src/ros2_tracing -b humble
+colcon build \
+  --build-base=build-kv260 \
+  --install-base=install-kv260 \
+  --merge-install \
+  --mixin kv260 \
+  --cmake-args -DNOKERNELS=false -DTRACETOOLS_LTTNG_ENABLED=true \
+  --packages-select \
+    ros2trace \
+    tracetools \
+    tracetools_launch \
+    tracetools_read \
+    tracetools_test \
+    tracetools_trace
+```
+
 ホスト側へ必要なデータをコピーする。
 
 ```shell
