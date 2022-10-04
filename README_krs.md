@@ -178,20 +178,20 @@ sudo XAUTHORITY=~/.Xauthority gparted
 microSDカードのブート領域をマウントする。
 
 ```shell
-sudo mkdir -p /media/BOOT
-sudo mount /dev/sdb1 /media/BOOT
+sudo mkdir -p /mnt/BOOT
+sudo mount /dev/sdb1 /mnt/BOOT
 ```
 
 PetaLinux Toolsで生成した`system.dtb`で上書きする。
 
 ```shell
-sudo cp $HOME/output/images/linux/system.dtb /media/BOOT/
+sudo cp $HOME/output/images/linux/system.dtb /mnt/BOOT/
 sync
 ```
 
 microSDカードをアンマウントする。
 
 ```shell
-sudo umount /media/BOOT/
+sudo umount /mnt/BOOT/
 sudo eject /dev/sdb
 ```
