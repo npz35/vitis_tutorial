@@ -65,6 +65,14 @@ source install/setup.bash
 colcon acceleration select kv260
 ```
 
+`acceleration/firmware/vitis/gnu`へシンボリックリンクを貼る。
+
+```shell
+mkdir -p acceleration/firmware/vitis
+ln -s /tools/Xilinx/Vitis/2022.1/gnu acceleration/firmware/vitis/gnu
+touch acceleration/firmware/vitis/COLCON_IGNORE
+```
+
 Kria KV260向けのROSパッケージをビルドする。
 
 ```shell
