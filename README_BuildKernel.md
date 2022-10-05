@@ -54,12 +54,14 @@ sudo /tools/Xilinx/Vitis/2022.1/scripts/installLibs.sh
 
 ### ビルド設定
 
-ビルド設定を行う。
+ビルド設定を行う。  
+`USER`にはユーザー名を設定しておく必要がある。
 
 ```shell
 source settings.sh
 petalinux-upgrade -u http://petalinux.xilinx.com/sswreleases/rel-v2022/sdkupdate/2022.1_update2/ -p "aarch64" --wget-args "--wait 1 -nH --cut-dirs=4"
 # petalinux-util --webtalk off
+sudo chown -R ${USER} xilinx-kv260-starterkit-2022.1
 petalinux-create --type project --source xilinx-kv260-starterkit-v2022.1-05140151.bsp
 cp output/kv260_custom_platform.xsa xilinx-kv260-starterkit-2022.1
 cd xilinx-kv260-starterkit-2022.1
