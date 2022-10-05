@@ -21,6 +21,9 @@ RUN apt-get update -y -qq && \
         libssl-dev \
         locales \
         libtinfo5 \
+        liblttng-ust-dev \
+        lttng-modules-dkms \
+        lttng-tools \
         make \
         net-tools \
         ocl-icd-* \

@@ -49,20 +49,19 @@ cd $HOME/vitis_tutorial/krs
 ./scripts/docker_run.sh
 ```
 
-Dockerコンテナの中でROSパッケージをビルドする。
-
-```shell
-cd $HOME/krs_ws
-colcon build \
-  --merge-install \
-  --packages-ignore offloaded_doublevadd_publisher
-```
-
 ファームウェアを選択する。
 
 ```shell
 source install/setup.bash
 colcon acceleration select kv260
+```
+
+`acceleration/firmware/vitis/gnu`へシンボリックリンクを貼る。
+
+```shell
+mkdir -p acceleration/firmware/vitis
+ln -s /tools/Xilinx/Vitis/2022.1/gnu acceleration/firmware/vitis/gnu
+touch acceleration/firmware/vitis/COLCON_IGNORE
 ```
 
 Kria KV260向けのROSパッケージをビルドする。
@@ -74,6 +73,21 @@ colcon build \
   --merge-install \
   --mixin kv260 \
   --cmake-args -DTRACETOOLS_LTTNG_ENABLED=true \
+  --packages-up-to \
+    ros2trace \
+    tracetools \
+    tracetools_launch \
+    tracetools_read \
+    tracetools_test \
+    tracetools_trace
+colcon build \
+  --build-base=build-kv260 \
+  --install-base=install-kv260 \
+  --merge-install \
+  --mixin kv260 \
+  --cmake-args \
+    -DNOKERNELS=false \
+    -DTRACETOOLS_LTTNG_ENABLED=true \
   --packages-select \
     ament_acceleration \
     ament_vitis \
@@ -86,7 +100,9 @@ colcon build \
   --install-base=install-kv260 \
   --merge-install \
   --mixin kv260 \
-  --cmake-args -DTRACETOOLS_LTTNG_ENABLED=true \
+  --cmake-args \
+    -DNOKERNELS=false \
+    -DTRACETOOLS_LTTNG_ENABLED=true \
   --packages-select simple_adder
 colcon build \
   --build-base=build-kv260 \
@@ -110,21 +126,6 @@ colcon build \
   --packages-select \
     image_proc \
     perception_2nodes
-colcon build \
-  --build-base=build-kv260 \
-  --install-base=install-kv260 \
-  --merge-install \
-  --mixin kv260 \
-  --cmake-args \
-    -DNOKERNELS=false \
-    -DTRACETOOLS_LTTNG_ENABLED=true \
-  --packages-select \
-    ros2trace \
-    tracetools \
-    tracetools_launch \
-    tracetools_read \
-    tracetools_test \
-    tracetools_trace
 ```
 
 ホスト側へ必要なデータをコピーする。
