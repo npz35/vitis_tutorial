@@ -63,9 +63,19 @@ petalinux-upgrade -u http://petalinux.xilinx.com/sswreleases/rel-v2022/sdkupdate
 # petalinux-util --webtalk off
 sudo chown -R ${USER} xilinx-kv260-starterkit-2022.1
 petalinux-create --type project --source xilinx-kv260-starterkit-v2022.1-05140151.bsp
-cp output/kv260_custom_platform.xsa xilinx-kv260-starterkit-2022.1
 cd xilinx-kv260-starterkit-2022.1
+```
+
+ハードウェアプラットフォームファイルを変更する場合には以下のコマンドを実行する。
+
+```shell
+cp ${HOME}/output/kv260_custom_platform.xsa .
 petalinux-config --get-hw-description=kv260_custom_platform.xsa --silent
+```
+
+`petalinux-config`を実行する。
+
+```shell
 petalinux-config
 ```
 
