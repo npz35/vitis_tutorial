@@ -73,6 +73,21 @@ colcon build \
   --merge-install \
   --mixin kv260 \
   --cmake-args -DTRACETOOLS_LTTNG_ENABLED=true \
+  --packages-up-to \
+    ros2trace \
+    tracetools \
+    tracetools_launch \
+    tracetools_read \
+    tracetools_test \
+    tracetools_trace
+colcon build \
+  --build-base=build-kv260 \
+  --install-base=install-kv260 \
+  --merge-install \
+  --mixin kv260 \
+  --cmake-args \
+    -DNOKERNELS=false \
+    -DTRACETOOLS_LTTNG_ENABLED=true \
   --packages-select \
     ament_acceleration \
     ament_vitis \
@@ -85,7 +100,9 @@ colcon build \
   --install-base=install-kv260 \
   --merge-install \
   --mixin kv260 \
-  --cmake-args -DTRACETOOLS_LTTNG_ENABLED=true \
+  --cmake-args \
+    -DNOKERNELS=false \
+    -DTRACETOOLS_LTTNG_ENABLED=true \
   --packages-select simple_adder
 colcon build \
   --build-base=build-kv260 \
@@ -109,21 +126,6 @@ colcon build \
   --packages-select \
     image_proc \
     perception_2nodes
-colcon build \
-  --build-base=build-kv260 \
-  --install-base=install-kv260 \
-  --merge-install \
-  --mixin kv260 \
-  --cmake-args \
-    -DNOKERNELS=false \
-    -DTRACETOOLS_LTTNG_ENABLED=true \
-  --packages-select \
-    ros2trace \
-    tracetools \
-    tracetools_launch \
-    tracetools_read \
-    tracetools_test \
-    tracetools_trace
 ```
 
 ホスト側へ必要なデータをコピーする。
