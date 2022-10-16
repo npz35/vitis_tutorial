@@ -12,6 +12,7 @@ RUN apt-get update -y -qq && \
         gdisk \ 
         git \
         graphviz \
+        imagemagick \
         kpartx \
         libeigen3-dev \
         libboost-dev \
@@ -34,12 +35,15 @@ RUN apt-get update -y -qq && \
         python3-colcon-common-extensions \
         python3-colcon-mixin \
         python3-vcstool \
+        python3-pip \
         ros-humble-camera-info-manager \
         ros-humble-cv-bridge \
         ros-humble-gazebo-ros \
+        ros-humble-gazebo-ros-pkgs \
         ros-humble-image-geometry \
         ros-humble-image-transport \
         ros-humble-rqt-graph \
+        ros-humble-rqt-image-view \
         ros-humble-tf2-eigen \
         ros-humble-tf2-geometry-msgs \
         ros-humble-tf2-ros \
@@ -68,6 +72,15 @@ USER ${USER_NAME}
 ENV HOME=/home/${USER_NAME}
 
 WORKDIR ${HOME}
+
+RUN python3 -m pip install \
+    pytk \
+    tk-tools \
+    wasabi \
+    pandas \
+    bokeh \
+    plotly \
+    kaleido
 
 # Please refer to https://xilinx.github.io/KRS/sphinx/build/html/docs/install.html
 COPY --chown=${USER_NAME} krs_humble.repos ${HOME}/krs_humble.repos
