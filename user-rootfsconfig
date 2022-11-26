@@ -108,5 +108,12 @@ CONFIG_xz
 CONFIG_zip
 CONFIG_zocl
 
+CONFIG_swig
+CONFIG_swig-dev
 CONFIG_tcl-dev
 CONFIG_tk-dev
+
+# CONFIG_vitis-ai-library
+# CONFIG_vitis-ai-library-dev
+# CONFIG_vitis-ai-library-dbg
+

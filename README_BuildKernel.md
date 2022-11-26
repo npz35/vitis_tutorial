@@ -59,7 +59,7 @@ sudo /tools/Xilinx/Vitis/2022.1/scripts/installLibs.sh
 
 ```shell
 source settings.sh
-petalinux-upgrade -u http://petalinux.xilinx.com/sswreleases/rel-v2022/sdkupdate/2022.1_update2/ -p "aarch64" --wget-args "--wait 1 -nH --cut-dirs=4"
+petalinux-upgrade -u http://petalinux.xilinx.com/sswreleases/rel-v2022/sdkupdate/2022.1_update3/ -p "aarch64" --wget-args "--wait 1 -nH --cut-dirs=4"
 # petalinux-util --webtalk off
 sudo chown -R ${USER} xilinx-kv260-starterkit-2022.1
 petalinux-create --type project --source xilinx-kv260-starterkit-v2022.1-05140151.bsp
