@@ -18,5 +18,5 @@ source "./krnl_gaussian_blur/solution/directives.tcl"
 csim_design -ldflags {-lopencv_core -lopencv_imgcodecs -lopencv_imgproc /usr/lib/x86_64-linux-gnu/libstdc++.so.6}
 csynth_design
 cosim_design -ldflags {-lopencv_core -lopencv_imgcodecs -lopencv_imgproc /usr/lib/x86_64-linux-gnu/libstdc++.so.6}
-# export_design -flow syn -rtl verilog -format ip_catalog
+export_design -flow syn -rtl verilog -format ip_catalog
 
