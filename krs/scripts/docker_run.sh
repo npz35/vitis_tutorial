@@ -13,5 +13,5 @@ docker run --interactive --tty \
     --env PULSE_SERVER=unix:/run/user/$(id -u)/pulse/native \
     --user $(id -u) \
     --name krs \
-    kv260/krs:1.0 \
+    kv260/krs:0.2.2 \
     /bin/bash
