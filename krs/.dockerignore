@@ -1,0 +1,6 @@
+images/linux/petalinux-sdimage.wic
+images/linux/rootfs.cpio
+images/linux/rootfs.ext4
+images/linux/rootfs.cpio.gz.u-boot
+images/linux/rootfs.jffs2
+images/linux/rootfs.tar.gz
