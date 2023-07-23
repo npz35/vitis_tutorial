@@ -109,8 +109,9 @@ RUN cd ${HOME}/krs_ws && \
         --merge-install \
         --packages-select acceleration_firmware_kv260
 
-RUN bash -c "echo 'source /tools/Xilinx/Vivado/2022.1/settings64.sh' >> .bashrc" && \
-    bash -c "echo 'source /tools/Xilinx/Vitis/2022.1/settings64.sh' >> .bashrc" && \
-    bash -c "echo 'source /tools/Xilinx/Vitis_HLS/2022.1/settings64.sh' >> .bashrc" && \
+ARG VERSION
+RUN bash -c "echo 'source /tools/Xilinx/Vivado/${VERSION}/settings64.sh' >> .bashrc" && \
+    bash -c "echo 'source /tools/Xilinx/Vitis/${VERSION}/settings64.sh' >> .bashrc" && \
+    bash -c "echo 'source /tools/Xilinx/Vitis_HLS/${VERSION}/settings64.sh' >> .bashrc" && \
     bash -c "echo 'source /opt/ros/humble/setup.bash' >> .bashrc" && \
     bash -c "echo 'export PATH="/usr/bin:\$PATH"' >> .bashrc"
