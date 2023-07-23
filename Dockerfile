@@ -75,10 +75,11 @@ ENV HOME=/home/${USER_NAME}
 WORKDIR ${HOME}
 
 ARG VERSION
+ARG INSTALLER_SUFFIX
 
-COPY --chown=${USER_NAME} petalinux-v${VERSION}-final-installer.run ${HOME}/petalinux-v${VERSION}-final-installer.run
-RUN yes | ./petalinux-v${VERSION}-final-installer.run --skip_license && \
-    rm ./petalinux-v${VERSION}-final-installer.run
+COPY --chown=${USER_NAME} petalinux-v${VERSION}-${INSTALLER_SUFFIX}-installer.run ${HOME}/petalinux-v${VERSION}-${INSTALLER_SUFFIX}-installer.run
+RUN yes | ./petalinux-v${VERSION}-${INSTALLER_SUFFIX}-installer.run --skip_license && \
+    rm ./petalinux-v${VERSION}-${INSTALLER_SUFFIX}-installer.run
 
 RUN bash -c "echo 'source /tools/Xilinx/Vivado/${VERSION}/settings64.sh' >> .bashrc" && \
     bash -c "echo 'source /tools/Xilinx/Vitis/${VERSION}/settings64.sh' >> .bashrc" && \
