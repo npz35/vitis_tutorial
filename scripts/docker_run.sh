@@ -8,8 +8,8 @@ if [ ! -d ${XILINX_TOOLS_INSTALL_DIR_PREFIX:-/tools/Xilinx} ]; then
 fi
 
 docker run --interactive --tty --privileged \
-    --env DISPLAY=$DISPLAY \
     --net host \
+    --env DISPLAY=$DISPLAY \
     --volume /tmp/.X11-unix:/tmp/.X11-unix \
     --volume $HOME/.Xauthority:/home/${USER_NAME}/.Xauthority \
     --volume ${XILINX_TOOLS_INSTALL_DIR_PREFIX:-/tools/Xilinx}:/tools/Xilinx:ro \
