@@ -112,6 +112,11 @@ RUN cd ${HOME}/krs_ws && \
         --merge-install \
         --packages-select acceleration_firmware_kv260
 
+RUN cd ${HOME}/krs_ws && \
+    mkdir -p acceleration/firmware/vitis && \
+    ln -s /tools/Xilinx/Vitis/2023.1/gnu acceleration/firmware/vitis/gnu && \
+    touch acceleration/firmware/vitis/COLCON_IGNORE
+
 ARG VERSION
 RUN bash -c "echo 'source /tools/Xilinx/Vivado/${VERSION}/settings64.sh' >> .bashrc" && \
     bash -c "echo 'source /tools/Xilinx/Vitis/${VERSION}/settings64.sh' >> .bashrc" && \
