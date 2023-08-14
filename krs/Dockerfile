@@ -8,7 +8,10 @@ RUN apt-get update -y -qq && \
         cpio \
         curl \
         fdisk \
+        file \
         g++ \
+        g++-aarch64-linux-gnu \
+        gcc-aarch64-linux-gnu \
         gdisk \ 
         git \
         graphviz \
