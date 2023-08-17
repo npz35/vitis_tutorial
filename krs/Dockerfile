@@ -8,7 +8,10 @@ RUN apt-get update -y -qq && \
         cpio \
         curl \
         fdisk \
+        file \
         g++ \
+        g++-aarch64-linux-gnu \
+        gcc-aarch64-linux-gnu \
         gdisk \ 
         git \
         graphviz \
@@ -89,6 +92,30 @@ RUN mkdir -p ${HOME}/krs_ws/src && \
     cd ${HOME}/krs_ws && \
     vcs import src --recursive < krs_humble.repos
 
+COPY --chown=${USER_NAME} images/linux/pmu_rom_qemu_sha3.elf ${HOME}/images/linux/pmu_rom_qemu_sha3.elf
+COPY --chown=${USER_NAME} images/linux/sdk.sh                ${HOME}/images/linux/sdk.sh
+COPY --chown=${USER_NAME} images/linux/system.bit            ${HOME}/images/linux/system.bit
+
+RUN cd ${HOME}/krs_ws && \
+    mkdir -p ${HOME}/acceleration_firmware_kv260-v1.0.0/acceleration_firmware_kv260 && \
+    mv \
+        src/firmware/acceleration_firmware_kv260/acceleration_firmware_kv260/firmware \
+        ${HOME}/acceleration_firmware_kv260-v1.0.0/acceleration_firmware_kv260/ && \
+    mkdir -p src/firmware/acceleration_firmware_kv260/acceleration_firmware_kv260/firmware/data && \
+    mv ${HOME}/images/linux/* src/firmware/acceleration_firmware_kv260/acceleration_firmware_kv260/firmware/ && \
+    cp -r \
+        ${HOME}/acceleration_firmware_kv260-v1.0.0/acceleration_firmware_kv260/firmware/imagebuilder \
+        ${HOME}/acceleration_firmware_kv260-v1.0.0/acceleration_firmware_kv260/firmware/lib \
+        ${HOME}/acceleration_firmware_kv260-v1.0.0/acceleration_firmware_kv260/firmware/SOC \
+        ${HOME}/acceleration_firmware_kv260-v1.0.0/acceleration_firmware_kv260/firmware/device_tree \
+        ${HOME}/acceleration_firmware_kv260-v1.0.0/acceleration_firmware_kv260/firmware/shell.json \
+        src/firmware/acceleration_firmware_kv260/acceleration_firmware_kv260/firmware/
+
+RUN cd ${HOME}/krs_ws && \
+    XSA_PATH="${HOME}/krs_workdir_2023_1/kv260_hardware_platform.xsa" && \
+    CFG_PLATFORM_PATH=`echo $XSA_PATH | sed 's/\\//\\\\\\//g'` && \
+    find src -name kv260.cfg | xargs sed -i "s/platform=kv260_custom_platform/platform=${CFG_PLATFORM_PATH}/g"
+
 RUN cd ${HOME}/krs_ws && \
     . /opt/ros/humble/setup.sh && \
     colcon build \
@@ -109,8 +136,14 @@ RUN cd ${HOME}/krs_ws && \
         --merge-install \
         --packages-select acceleration_firmware_kv260
 
-RUN bash -c "echo 'source /tools/Xilinx/Vivado/2022.1/settings64.sh' >> .bashrc" && \
-    bash -c "echo 'source /tools/Xilinx/Vitis/2022.1/settings64.sh' >> .bashrc" && \
-    bash -c "echo 'source /tools/Xilinx/Vitis_HLS/2022.1/settings64.sh' >> .bashrc" && \
+RUN cd ${HOME}/krs_ws && \
+    mkdir -p acceleration/firmware/vitis && \
+    ln -s /tools/Xilinx/Vitis/2023.1/gnu acceleration/firmware/vitis/gnu && \
+    touch acceleration/firmware/vitis/COLCON_IGNORE
+
+ARG VERSION
+RUN bash -c "echo 'source /tools/Xilinx/Vivado/${VERSION}/settings64.sh' >> .bashrc" && \
+    bash -c "echo 'source /tools/Xilinx/Vitis/${VERSION}/settings64.sh' >> .bashrc" && \
+    bash -c "echo 'source /tools/Xilinx/Vitis_HLS/${VERSION}/settings64.sh' >> .bashrc" && \
     bash -c "echo 'source /opt/ros/humble/setup.bash' >> .bashrc" && \
     bash -c "echo 'export PATH="/usr/bin:\$PATH"' >> .bashrc"
