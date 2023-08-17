@@ -92,6 +92,25 @@ RUN mkdir -p ${HOME}/krs_ws/src && \
     cd ${HOME}/krs_ws && \
     vcs import src --recursive < krs_humble.repos
 
+COPY --chown=${USER_NAME} images/linux/pmu_rom_qemu_sha3.elf ${HOME}/images/linux/pmu_rom_qemu_sha3.elf
+COPY --chown=${USER_NAME} images/linux/sdk.sh                ${HOME}/images/linux/sdk.sh
+COPY --chown=${USER_NAME} images/linux/system.bit            ${HOME}/images/linux/system.bit
+
+RUN cd ${HOME}/krs_ws && \
+    mkdir -p ${HOME}/acceleration_firmware_kv260-v1.0.0/acceleration_firmware_kv260 && \
+    mv \
+        src/firmware/acceleration_firmware_kv260/acceleration_firmware_kv260/firmware \
+        ${HOME}/acceleration_firmware_kv260-v1.0.0/acceleration_firmware_kv260/ && \
+    mkdir -p src/firmware/acceleration_firmware_kv260/acceleration_firmware_kv260/firmware/data && \
+    mv ${HOME}/images/linux/* src/firmware/acceleration_firmware_kv260/acceleration_firmware_kv260/firmware/ && \
+    cp -r \
+        ${HOME}/acceleration_firmware_kv260-v1.0.0/acceleration_firmware_kv260/firmware/imagebuilder \
+        ${HOME}/acceleration_firmware_kv260-v1.0.0/acceleration_firmware_kv260/firmware/lib \
+        ${HOME}/acceleration_firmware_kv260-v1.0.0/acceleration_firmware_kv260/firmware/SOC \
+        ${HOME}/acceleration_firmware_kv260-v1.0.0/acceleration_firmware_kv260/firmware/device_tree \
+        ${HOME}/acceleration_firmware_kv260-v1.0.0/acceleration_firmware_kv260/firmware/shell.json \
+        src/firmware/acceleration_firmware_kv260/acceleration_firmware_kv260/firmware/
+
 RUN cd ${HOME}/krs_ws && \
     . /opt/ros/humble/setup.sh && \
     colcon build \
