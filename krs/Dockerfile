@@ -112,6 +112,11 @@ RUN cd ${HOME}/krs_ws && \
         src/firmware/acceleration_firmware_kv260/acceleration_firmware_kv260/firmware/
 
 RUN cd ${HOME}/krs_ws && \
+    XSA_PATH="${HOME}/krs_workdir_2023_1/kv260_hardware_platform.xsa" && \
+    CFG_PLATFORM_PATH=`echo $XSA_PATH | sed 's/\\//\\\\\\//g'` && \
+    find src -name kv260.cfg | xargs sed -i "s/platform=kv260_custom_platform/platform=${CFG_PLATFORM_PATH}/g"
+
+RUN cd ${HOME}/krs_ws && \
     . /opt/ros/humble/setup.sh && \
     colcon build \
         --merge-install \
