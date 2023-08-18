@@ -1,3 +1,6 @@
 [submodule "petalinux-tools-docker"]
 	path = petalinux-tools-docker
 	url = https://github.com/npz35/petalinux-tools-docker.git
+[submodule "kria-robotics-stack-docker"]
+	path = kria-robotics-stack-docker
+	url = https://github.com/npz35/kria-robotics-stack-docker.git
