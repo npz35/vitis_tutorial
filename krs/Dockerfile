@@ -116,6 +116,11 @@ RUN cd ${HOME}/krs_ws && \
     CFG_PLATFORM_PATH=`echo $XSA_PATH | sed 's/\\//\\\\\\//g'` && \
     find src -name kv260.cfg | xargs sed -i "s/platform=kv260_custom_platform/platform=${CFG_PLATFORM_PATH}/g"
 
+ARG VPP_PARALLEL
+RUN cd ${HOME}/krs_ws && \
+    find src -name kv260.cfg | \
+        xargs -I{} sh -c 'echo "\n[vivado]\nsynth.jobs=${VPP_PARALLEL}\nimpl.jobs=${VPP_PARALLEL}\n\n[hls]\njobs=${VPP_PARALLEL}\n" >> {}'
+
 RUN cd ${HOME}/krs_ws && \
     . /opt/ros/humble/setup.sh && \
     colcon build \
@@ -136,12 +141,13 @@ RUN cd ${HOME}/krs_ws && \
         --merge-install \
         --packages-select acceleration_firmware_kv260
 
+ARG VERSION
+
 RUN cd ${HOME}/krs_ws && \
     mkdir -p acceleration/firmware/vitis && \
-    ln -s /tools/Xilinx/Vitis/2023.1/gnu acceleration/firmware/vitis/gnu && \
+    ln -s /tools/Xilinx/Vitis/${VERSION}/gnu acceleration/firmware/vitis/gnu && \
     touch acceleration/firmware/vitis/COLCON_IGNORE
 
-ARG VERSION
 RUN bash -c "echo 'source /tools/Xilinx/Vivado/${VERSION}/settings64.sh' >> .bashrc" && \
     bash -c "echo 'source /tools/Xilinx/Vitis/${VERSION}/settings64.sh' >> .bashrc" && \
     bash -c "echo 'source /tools/Xilinx/Vitis_HLS/${VERSION}/settings64.sh' >> .bashrc" && \
