@@ -1,6 +1,1 @@
-*.md
-vivado*
-vitis*
-*kv260*
-scripts
-output
+petalinux-tools-docker/.dockerignore
