@@ -116,6 +116,11 @@ RUN cd ${HOME}/krs_ws && \
     CFG_PLATFORM_PATH=`echo $XSA_PATH | sed 's/\\//\\\\\\//g'` && \
     find src -name kv260.cfg | xargs sed -i "s/platform=kv260_custom_platform/platform=${CFG_PLATFORM_PATH}/g"
 
+ARG VPP_PARALLEL
+RUN cd ${HOME}/krs_ws && \
+    find src -name kv260.cfg | \
+        xargs -I{} sh -c 'echo "\n[vivado]\nsynth.jobs=${VPP_PARALLEL}\nimpl.jobs=${VPP_PARALLEL}\n\n[hls]\njobs=${VPP_PARALLEL}\n" >> {}'
+
 RUN cd ${HOME}/krs_ws && \
     . /opt/ros/humble/setup.sh && \
     colcon build \
