@@ -16,5 +16,5 @@ docker run --interactive --tty --privileged \
     --volume ${XILINX_TOOLS_INSTALL_DIR_PREFIX:-/tools/Xilinx}:${XILINX_TOOLS_INSTALL_DIR_PREFIX:-/tools/Xilinx}:ro \
     --volume $HOME/krs_workdir_2023_1:/home/${USER_NAME}/krs_workdir_2023_1 \
     --name build_petalinux \
-    kv260/petalinux-builder:0.3.0 \
+    kv260/petalinux-builder:0.4.0 \
     /bin/bash

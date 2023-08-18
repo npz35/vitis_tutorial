@@ -6,5 +6,5 @@ docker build \
   --build-arg VERSION=2023.1 \
   --build-arg INSTALLER_SUFFIX=05012318 \
   -f Dockerfile \
-  -t kv260/petalinux-builder:0.3.0 \
+  -t kv260/petalinux-builder:0.4.0 \
   .

@@ -6,5 +6,5 @@ docker build \
   --build-arg VERSION=2023.1 \
   --build-arg VPP_PARALLEL=6 \
   -f Dockerfile \
-  -t kv260/krs:0.2.2 \
+  -t kv260/krs:0.4.0 \
   .
